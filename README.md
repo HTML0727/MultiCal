@@ -46,4 +46,4 @@ python3 calc.py
 
 ## 许可证
 
-MIT License
+NC OSL License
