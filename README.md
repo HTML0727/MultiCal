@@ -26,13 +26,13 @@ MultiCal 是一个基于 Python 的终端计算器，采用现代化的界面设
 3. 在终端中运行以下命令：
 
 ```bash
-python3 calc.py
+python3 main.py
 ```
 
 或者在 Unix/Linux 系统上：
 
 ```bash
-./calc.py
+./main.py
 ```
 
 ## 使用示例

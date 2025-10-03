@@ -1,2 +1,2 @@
 @echo off
-python calc.py
+python main.py
