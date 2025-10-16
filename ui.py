@@ -30,14 +30,41 @@ class CalculatorUI:
             ["=", "C", "Del", "Ans", "Help", "Quit"]
         ]
         
+        # 编程按钮布局
+        self.codingbuttons = [
+            ["0", "1"],
+            ["/", " * "],
+            ["-", "+"],
+            ["=",]
+        ]
+
         # 逻辑门按钮布局
         self.logic_gate_buttons = [
             ["AND", "OR", "NOT", "XOR", "NAND", "NOR"],
+            ["Truth", "Table", "Show", "0", "1", "Calc"],
             ["7", "8", "9", " / ", "sin(", "cos("],
             ["4", "5", "6", " * ", "tan(", "sqrt("],
             ["1", "2", "3", " - ", "log(", "exp("],
             ["0", ".", "π", " + ", "(", ")"],
             ["=", "C", "Del", "Ans", "Help", "Quit"]
+        ]
+
+        # 进制换算按钮布局
+        self.base_conversion_buttons = [
+            ["BIN", "OCT", "DEC", "HEX", "CONV", "SWAP"],
+            ["7", "8", "9", "A", "B", "C"],
+            ["4", "5", "6", "D", "E", "F"],
+            ["1", "2", "3", "CLR", "Help", "Quit"],
+            ["0", ".", "=", "Ans", "Mode", "Back"]
+        ]
+
+        # 正则表达式按钮布局
+        self.regex_buttons = [
+            ["match", "search", "findall", "sub", "split", "compile"],
+            ["^", "$", "*", "+", "?", "."],
+            ["[", "]", "(", ")", "{", "}"],
+            ["|", "\\", "w", "d", "s", "b"],
+            ["CLR", "Test", "=", "Ans", "Help", "Quit"]
         ]
         
     def draw(self, expression, result, history, selected_row, selected_col, cursor_pos, show_help, mode):
@@ -103,6 +130,23 @@ class CalculatorUI:
         self.stdscr.attron(curses.color_pair(self.style.color_pairs['title']))
         self.stdscr.addstr(1, 2, mode_text)
         self.stdscr.attroff(curses.color_pair(self.style.color_pairs['title']))
+
+        # 为不同模式显示特殊提示
+        if mode == "逻辑门":
+            hint = "提示: 输入二进制数字，如 101 AND 110"
+            self.stdscr.attron(curses.color_pair(self.style.color_pairs['expression']))
+            self.stdscr.addstr(1, width - len(hint) - 2, hint)
+            self.stdscr.attroff(curses.color_pair(self.style.color_pairs['expression']))
+        elif mode == "进制换算":
+            hint = "提示: 格式如 16:FF 或 DEC:255"
+            self.stdscr.attron(curses.color_pair(self.style.color_pairs['expression']))
+            self.stdscr.addstr(1, width - len(hint) - 2, hint)
+            self.stdscr.attroff(curses.color_pair(self.style.color_pairs['expression']))
+        elif mode == "正则表达式":
+            hint = "提示: 格式如 pattern,text"
+            self.stdscr.attron(curses.color_pair(self.style.color_pairs['expression']))
+            self.stdscr.addstr(1, width - len(hint) - 2, hint)
+            self.stdscr.attroff(curses.color_pair(self.style.color_pairs['expression']))
         
         # 绘制显示区域边框
         display_height = 4
@@ -154,8 +198,18 @@ class CalculatorUI:
         if height < 20 or width < 60:
             return
             
+        
         # 根据模式选择按钮布局
-        buttons = self.logic_gate_buttons if mode == "逻辑门" else self.buttons
+        if mode == "编程":
+            buttons = self.codingbuttons
+        elif mode == "逻辑门":
+            buttons = self.logic_gate_buttons
+        elif mode == "进制换算":
+            buttons = self.base_conversion_buttons
+        elif mode == "正则表达式":
+            buttons = self.regex_buttons
+        else:
+            buttons = self.buttons
         start_y = 8
         
         for i, row in enumerate(buttons):
@@ -270,17 +324,24 @@ class CalculatorUI:
         
         # 帮助内容
         help_texts = [
+            "-------------------帮助---------------------",
             "方向键: 导航按钮",
             "回车/空格: 选择按钮",
             "数字键: 直接输入数字",
             "运算符: 直接输入 + - * /",
             "退格键: 删除上一个字符",
-            "Esc: 清除表达式",
             "h: 显示/隐藏帮助",
-            "j: 切换计算模式",
+            "j: 切换计算模式 (标准/编程/逻辑门/正则表达式/进制换算)",
             "q: 退出计算器",
             "--------------------------------",
-            "Nekosparry浪费了114514秒打造"
+            "标准模式: 基本数学运算和函数",
+            "编程模式: 简单的编程计算",
+            "逻辑门模式: 二进制逻辑运算 (AND/OR/NOT/XOR/NAND/NOR)",
+            "正则表达式模式: 正则表达式测试",
+            "进制换算模式: 2/8/10/16进制转换",
+            "--------------------------------",
+            "Nekosparry浪费了114514秒打造",
+            "--------------------------------"
         ]
         
         for i, text in enumerate(help_texts):
